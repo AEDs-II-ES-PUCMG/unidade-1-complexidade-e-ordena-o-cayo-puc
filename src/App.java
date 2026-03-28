@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 
 public class App {
     static final int[] tamanhosTesteGrande =  { 31_250_000, 62_500_000, 125_000_000, 250_000_000, 500_000_000 };
@@ -38,7 +39,35 @@ public class App {
 
 
     public static void main(String[] args) {
-        for(int tam : tamanhosTestePequeno){
+        Scanner teclado = new Scanner(System.in);
+        int opcao = -1;
+        do{
+            System.out.println("\nQual metódo deseja usar?\n1-Bubble sort\n2-Insertion Sort\n3-Selection Sort\n4-Merge Sort\n0-Sair");
+            opcao = teclado.nextInt();
+            switch (opcao) {
+                case 1:
+                    BubbleSort<Integer> bolha = new BubbleSort<>();
+                    teste(bolha, "Bubble Sort");
+                    break;
+                case 2:
+                    InsertionSort<Integer> insertion = new InsertionSort<>();
+                    teste(insertion, "Insertion Sort");
+                    break;
+                case 3:
+                    SelectionSort<Integer> selection = new SelectionSort<>();
+                    teste(selection, "Selection Sort");
+                    break;
+                case 4:
+                    MergeSort<Integer> merge = new MergeSort<>();
+                    teste(merge, "Merge Sort");
+                    break;
+                
+                default:
+                    break;
+            }
+        }while(opcao != 0);
+        
+        /*for(int tam : tamanhosTestePequeno){
             Integer[] vetor = gerarVetorObjetos(tam);
             System.out.println("\nVetor de tamanho: "+tam);
 
@@ -65,7 +94,20 @@ public class App {
             System.out.println("Comparações: " + selection.getComparacoes());
             System.out.println("Movimentações: " + selection.getMovimentacoes());
             System.out.println("Tempo (ms): " + selection.getTempoOrdenacao());
-        }
+        }*/
         
+    }
+
+    public static void teste(IOrdenador ordenador, String tipo){
+        System.out.println("Vetor ordenado pelo metodo "+tipo);
+        for(int tam : tamanhosTestePequeno){
+            Integer[] vetor = gerarVetorObjetos(tam);
+            System.out.println("\nVetor de tamanho: "+tam);
+            ordenador.ordenar(vetor);
+            System.out.println("Comparações: " + ordenador.getComparacoes());
+            System.out.println("Movimentações: " + ordenador.getMovimentacoes());
+            System.out.println("Tempo de ordenação (ms): " + ordenador.getTempoOrdenacao());
+        
+        }
     }
 }
