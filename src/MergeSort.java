@@ -1,12 +1,13 @@
 import java.util.Arrays;
 
-public class MergeSort<T extends Comparable> implements IOrdenador<T> {
-        private int comparacoes;
+public class MergeSort<T extends Comparable<T>> implements IOrdenador<T> {
+
+    private int comparacoes;
     private int movimentacoes;
     private double tempoOrdenacao;
     private double inicio;
 
-    private double nanoToMilli = 1.0/1_000_000;
+    private double nanoToMilli = 1.0 / 1_000_000;
 
     @Override
     public int getComparacoes() {
@@ -23,35 +24,27 @@ public class MergeSort<T extends Comparable> implements IOrdenador<T> {
         return tempoOrdenacao;
     }
 
-    private void iniciar(){
+    private void iniciar() {
         this.comparacoes = 0;
         this.movimentacoes = 0;
         this.inicio = System.nanoTime();
     }
 
-    private void terminar(){
+    private void terminar() {
         this.tempoOrdenacao = (System.nanoTime() - this.inicio) * nanoToMilli;
-    }
-
-    private void swap(int x, int y, T[] vetor) {
-        T temp = vetor[x];
-        vetor[x] = vetor[y];
-        vetor[y] = temp;
-        movimentacoes+=3;
     }
 
     @Override
     public T[] ordenar(T[] dados) {
         T[] dadosOrdenados = Arrays.copyOf(dados, dados.length);
-        int tamanho = dadosOrdenados.length;
         iniciar();
-        mergesort(dadosOrdenados, 0, tamanho);
+        mergesort(dadosOrdenados, 0, dadosOrdenados.length - 1);
         terminar();
         return dadosOrdenados;
     }
 
-    private void mergesort(T[] dados, int esq, int dir){
-        if (esq < dir){
+    private void mergesort(T[] dados, int esq, int dir) {
+        if (esq < dir) {
             int meio = (esq + dir) / 2;
             mergesort(dados, esq, meio);
             mergesort(dados, meio + 1, dir);
@@ -59,43 +52,31 @@ public class MergeSort<T extends Comparable> implements IOrdenador<T> {
         }
     }
 
-    
-    private void intercalar(T[]dados, int esq, int meio, int dir) {
-        int n1, n2, i, j, k;
+    private void intercalar(T[] dados, int esq, int meio, int dir) {
 
-        //Definir tamanho dos dois subarrays
-        n1 = meio - esq + 1;
-        n2 = dir - meio;
+        T[] a1 = Arrays.copyOfRange(dados, esq, meio + 1);
+        T[] a2 = Arrays.copyOfRange(dados, meio + 1, dir + 1);
 
-        Integer[] a1 = new Integer[n1];
-        Integer[] a2 = new Integer[n2];
+        int i = 0, j = 0, k = esq;
 
-        //Inicializar primeiro subarray
-      	for (i = 0; i < n1; i++) {
-        	a1[i] = dados[esq + i];
-      	}
-
-      	//Inicializar segundo subarray
-      	for (j = 0; j < n2; j++) {
-        	a2[j] = dados[meio + j + 1];
-      	}
-
-	    //Intercalação propriamente dita
-      	for (i = j = 0, k = esq; (i < n1 && j < n2); k++) {
-            if (a1[i] <= a2[j]){
-                dados[k] = a1[i++];
-            }else{
-                dados[k] = a2[j++];
+        while (i < a1.length && j < a2.length) {
+            comparacoes++;
+            if (a1[i].compareTo(a2[j]) <= 0) {
+                dados[k++] = a1[i++];
+            } else {
+                dados[k++] = a2[j++];
             }
+            movimentacoes++;
         }
-	    if (i == n1){
-            for (; k <= dir; k++) {
-                dados[k] = a2[j++];
-            }
-        }else{
-            for (; k <= dir; k++) {
-                dados[k] = a1[i++];
-            }
+
+        while (i < a1.length) {
+            dados[k++] = a1[i++];
+            movimentacoes++;
         }
-    }            
+
+        while (j < a2.length) {
+            dados[k++] = a2[j++];
+            movimentacoes++;
+        }
+    }
 }
