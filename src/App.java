@@ -100,7 +100,7 @@ public class App {
 
     public static void teste(IOrdenador ordenador, String tipo){
         System.out.println("Vetor ordenado pelo metodo "+tipo);
-        for(int tam : tamanhosTestePequeno){
+        for(int tam : tamanhosTesteMedio){
             Integer[] vetor = gerarVetorObjetos(tam);
             System.out.println("\nVetor de tamanho: "+tam);
             ordenador.ordenar(vetor);
